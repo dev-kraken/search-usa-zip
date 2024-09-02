@@ -35,7 +35,7 @@ COPY . /var/www
 RUN composer install
 
 # Change ownership of our applications
-RUN chown -R www-data:www-data /srv/http/search_zip
+RUN chown -R www-data:www-data /var/www
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
