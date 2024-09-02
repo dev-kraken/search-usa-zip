@@ -1,0 +1,17 @@
+{
+  "name": "devkraken/search-usa-zip",
+  "description": "A search usa zip with optional Redis caching",
+  "type": "project",
+  "require": {
+    "php": ">=8.0",
+    "predis/predis": "^2.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "DevKraken\\": "src/"
+    }
+  }
+}
