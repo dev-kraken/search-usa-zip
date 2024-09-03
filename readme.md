@@ -39,12 +39,17 @@ A robust and efficient search service built with PHP 8.3, leveraging Docker for 
    git clone https://github.com/yourusername/devkraken-search-service.git
    cd devkraken-search-service
    ```
-2. Build and start the Docker containers:
+2. Copy .env.example to .env
+   ```bash
+   cp .env.example .env
+    ```
+
+3. Build and start the Docker containers:
    ```bash
    docker-compose up -d --build
    ```
-
-3. The service should now be running at http://localhost:8080.
+   
+4. The service should now be running at http://localhost:8080.
 
 ## 🖥 Usage
 
