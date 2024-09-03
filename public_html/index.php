@@ -27,7 +27,7 @@ $searchController = new SearchController($searchService);
 $router = new Router();
 
 $router->addRoute('/', fn($queryParams) => $searchController->handle($queryParams, SearchResultDTO::class));
-$router->addRoute('/new', fn($queryParams) => $searchController->handle($queryParams, NewSearchResultDTO::class));
+    $router->addRoute('/new', fn($queryParams) => $searchController->handle($queryParams, NewSearchResultDTO::class));
 
 $path = $_SERVER['REQUEST_URI'];
 $response = $router->routeRequest($path);

@@ -18,11 +18,15 @@ class Router
 
     public function routeRequest(string $path): array
     {
-        $parsedUrl = $this->parseUrl($path);
-        $routePath = $parsedUrl['path'];
-        $queryParams = $this->extractQueryParams($parsedUrl);
+        try {
+            $parsedUrl = $this->parseUrl($path);
+            $routePath = $parsedUrl['path'];
+            $queryParams = $this->extractQueryParams($parsedUrl);
 
-        return $this->executeHandler($routePath, $queryParams);
+            return $this->executeHandler($routePath, $queryParams);
+        } catch (InvalidArgumentException $e) {
+            return ['error' => $e->getMessage()];
+        }
     }
 
     private function parseUrl(string $path): array
@@ -55,14 +59,18 @@ class Router
         return $queryParams;
     }
 
+
     private function executeHandler(string $routePath, array $queryParams): array
     {
+        if (isset($queryParams['error'])) {
+            return $queryParams; // This is the error from extractQueryParams
+        }
+
         $handler = $this->routes[$routePath] ?? null;
 
         if ($handler === null) {
             return ['error' => '404 Not Found'];
         }
-
         return $handler($queryParams);
     }
 }

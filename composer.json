@@ -3,8 +3,9 @@
   "description": "A search usa zip with optional Redis caching",
   "type": "project",
   "require": {
-    "php": ">=8.0",
-    "predis/predis": "^2.0"
+    "php": ">=8.3",
+    "predis/predis": "^2.0",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

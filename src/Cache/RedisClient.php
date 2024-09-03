@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace DevKraken\Cache;
 
+use DevKraken\DTO\NewSearchResultDTO;
 use Predis\Client;
 use Predis\Response\Status;
+use DevKraken\DTO\SearchResultDTO;
 
 class RedisClient implements CacheInterface
 {
@@ -30,9 +32,9 @@ class RedisClient implements CacheInterface
         // Specify allowed classes for serialization
         return unserialize($value, [
             'allowed_classes' => [
-                // List allowed classes here, for example:
-                // 'MyApp\DTO\UserDTO',
-                // 'MyApp\DTO\ProductDTO',
+                // List allowed classes here:
+                SearchResultDTO::class,
+                NewSearchResultDTO::class,
             ]
         ]);
     }

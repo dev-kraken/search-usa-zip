@@ -18,9 +18,9 @@ readonly class SearchController
     public function handle(array $queryParams, string $dtoClass): array
     {
         $requestDTO = $this->createSearchRequestDTO($queryParams);
-        $results = $this->searchService->search($requestDTO, $dtoClass);
+        $searchData = $this->searchService->search($requestDTO, $dtoClass);
 
-        return $this->formatResults($results);
+        return $this->formatResults($searchData['results']);
     }
 
     private function createSearchRequestDTO(array $queryParams): SearchRequestDTO
@@ -34,6 +34,9 @@ readonly class SearchController
      */
     private function formatResults(array $results): array
     {
+        if (empty($results)) {
+            return ['error' => 'No search found'];
+        }
         return array_map(
             static fn(SearchResultInterface $dto): array => $dto->toArray(),
             $results
