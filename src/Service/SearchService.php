@@ -8,6 +8,7 @@ use DevKraken\DTO\SearchRequestDTO;
 use DevKraken\Database\DatabaseInterface;
 use DevKraken\Cache\CacheInterface;
 use PDO;
+use PDOException;
 
 readonly class SearchService
 {
@@ -28,13 +29,19 @@ readonly class SearchService
             }
         }
 
-        $searchData = $this->performSearch($request->searchTerm, $dtoClass);
+        try {
+            $searchData = $this->performSearch($request->searchTerm, $dtoClass);
 
-        if ($request->useCache && $this->cache !== null && !empty($searchData['results'])) {
-            $this->cache->set($cacheKey, serialize($searchData));
+            if ($request->useCache && $this->cache !== null && !empty($searchData['results'])) {
+                $this->cache->set($cacheKey, serialize($searchData), 3600); // Cache for 1 hour
+            }
+
+            return $searchData;
+        } catch (PDOException $e) {
+            // Log the error
+            error_log("Database error: ".$e->getMessage());
+            return ['error' => 'An error occurred while performing the search.'];
         }
-
-        return $searchData;
     }
 
     private function getCachedResults(string $cacheKey, string $dtoClass): ?array
@@ -60,12 +67,15 @@ readonly class SearchService
 
     private function performSearch(string $searchTerm, string $dtoClass): array
     {
-        $sql = "SELECT delivery_zip, phy_city, phy_state_abbr, district_name 
-            FROM usa_zip_local 
-            WHERE delivery_zip LIKE :search OR phy_city LIKE :search
-            GROUP BY delivery_zip
-            ORDER BY delivery_zip
-            LIMIT 10";
+        $sql = "SELECT delivery_zip, 
+                       MAX(phy_city) as phy_city, 
+                       MAX(phy_state_abbr) as phy_state_abbr, 
+                       MAX(district_name) as district_name
+                FROM usa_zip_local 
+                WHERE delivery_zip LIKE :search OR phy_city LIKE :search
+                GROUP BY delivery_zip
+                ORDER BY delivery_zip
+                LIMIT 10";
 
         $searchParam = "$searchTerm%";
         $params = [':search' => $searchParam];
@@ -92,18 +102,13 @@ readonly class SearchService
 
     private function processSearchResults(array $results, string $dtoClass): array
     {
-        $zipCodes = [];
-        $data = [];
-
-        foreach ($results as $row) {
-            $data[] = new $dtoClass(
+        return array_map(static function ($row) use ($dtoClass) {
+            return new $dtoClass(
                 districtName: $row['district_name'],
                 physicalCity: $row['phy_city'],
                 physicalStateAbbr: $row['phy_state_abbr'],
                 physicalZip: $row['delivery_zip']
             );
-        }
-
-        return $data;
+        }, $results);
     }
 }

@@ -45,7 +45,7 @@ services:
     container_name: search_zip_redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "6380:6379"
     networks:
       - app-network
 
@@ -55,15 +55,15 @@ services:
     container_name: search_zip_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: DevKraken
-      MYSQL_DATABASE: search_zip
-      MYSQL_USER: devkraken
-      MYSQL_PASSWORD: DevKraken
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - app-network
 

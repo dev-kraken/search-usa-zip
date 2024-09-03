@@ -5,7 +5,8 @@
   "require": {
     "php": ">=8.3",
     "predis/predis": "^2.0",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "devkraken/kraken-env-keeper": "^1.0"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

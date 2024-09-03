@@ -6,3 +6,5 @@ gen
 /vendor
 
 composer.lock
+
+.env

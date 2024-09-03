@@ -17,9 +17,9 @@ readonly class NewSearchResultDTO implements SearchResultInterface
     public function toArray(): array
     {
         return [
-            'zip' => $this->physicalZip,
-            'city' => $this->physicalCity,
-            'state' => $this->physicalStateAbbr
+            'physical_city' => $this->physicalCity,
+            'physical_state_abbr' => $this->physicalStateAbbr,
+            'physical_zip' => $this->physicalZip
         ];
     }
 }
